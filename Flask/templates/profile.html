@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}">Health Compass 🧭</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('tips') }}">Tips/Tricks</a>
+                <a href="{{ url_for('doctors') }}">Doctors</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-section">
+            <h1>Your Profile</h1>
+            <div class="profile-details">
+                <p><strong>Name:</strong> {{ user['name'] }}</p>
+                <p><strong>Email:</strong> {{ user['mail'] }}</p>
+                <p><strong>Location:</strong> {{ user['location'] }}</p>
+                <p><strong>Gender:</strong> {{ user['gender'] }}</p>
+                <p><strong>Age:</strong> {{ user['age'] }}</p>
+            </div>
+
+            <div class="health-data">
+                <h2>Your Health Data</h2>
+                {% if health_data %}
+                <table class="health-data-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Health Parameters</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for health in health_data %}
+                        <tr>
+                            <td><b>{{ health['type'] }}</b></td>
+                            <td>
+                                <ul>
+                                    {% if health['type'] == 'Heart Disease' %}
+                                    <li><b>Age: </b>{{ health['health_parameters']['age'] }}</li>
+                                    <li><b>Sex:</b> {{ 'Male' if health['health_parameters']['sex'] == 1 else 'Female' }}</li>
+                                    <li><b>Type of chest pain you experience:</b> {{ health['health_parameters']['cp'] }}</li>
+                                    <li><b>Your blood pressure when resting:</b> {{ health['health_parameters']['trestbps'] }} mm Hg</li>
+                                    <li><b>Your cholesterol level:</b> {{ health['health_parameters']['chol'] }} mg/dL</li>
+                                    <li><b>Is your fasting blood sugar level higher than 120 mg/dL?:</b> {{ 'Yes' if health['health_parameters']['fbs'] == 1 else 'No' }}</li>
+                                    <li><b>Your resting ECG results:</b> {{ health['health_parameters']['restecg'] }}</li>
+                                    <li><b>The highest heart rate you reached during exercise:</b> {{ health['health_parameters']['thalach'] }} bpm</li>
+                                    <li><b>Do you experience pain or discomfort in your chest during exercise?:</b> {{ 'Yes' if health['health_parameters']['exang'] == 1 else 'No' }}</li>
+                                    <li><b>Depression of ST segment during exercise:</b> {{ health['health_parameters']['oldpeak'] }}</li>
+                                    <li><b>Shape of ST segment during peak exercise:</b> {{ health['health_parameters']['slope'] }}</li>
+                                    <li><b>Number of blood vessels colored by fluoroscopy:</b> {{ health['health_parameters']['ca'] }}</li>
+                                    <li><b>Result of thallium stress test:</b> {{ health['health_parameters']['thal'] }}</li>
+                                    {% elif health['type'] == 'Diabetes' %}
+                                    <li><b>Number of Pregnancies:</b> {{ health['health_parameters']['pregnancies'] }}</li>
+                                    <li><b>Glucose Level:</b> {{ health['health_parameters']['glucose'] }} mg/dL</li>
+                                    <li><b>Blood Pressure:</b> {{ health['health_parameters']['bloodpressure'] }} mm Hg</li>
+                                    <li><b>Skin Thickness:</b> {{ health['health_parameters']['skinthickness'] }} mm</li>
+                                    <li><b>Insulin Level:</b> {{ health['health_parameters']['insulin'] }} IU/mL</li>
+                                    <li><b>Body Mass Index (BMI):</b> {{ health['health_parameters']['bmi'] }}</li>
+                                    <li><b>Diabetes Pedigree Function (DPF):</b> {{ health['health_parameters']['dpf'] }}</li>
+                                    <li><b>Age:</b> {{ health['health_parameters']['age'] }}</li>
+                                    {% else %}
+                                    <li>Unknown health data</li>
+                                    {% endif %}
+                                </ul>
+                            </td>
+                            <td><b>{{ health['result'] }}</b></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No health data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

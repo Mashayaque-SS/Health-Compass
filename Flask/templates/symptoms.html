@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptoms</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}">Health Compass 🧭</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('tips') }}">Tips/Tricks</a>
+                <a href="{{ url_for('doctors') }}">Doctors</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="about-section">
+            <h2>Warning Symptoms for Heart Disease and Diabetes:</h2>
+            <h3>Heart Disease:</h3>
+            <ul>
+                <li>Chest pain or discomfort, especially with activity.</li>
+                <li>Shortness of breath.</li>
+                <li>Pain in the neck, jaw, throat, upper abdomen, or back.</li>
+                <li>Numbness or weakness in the legs or arms.</li>
+                <li>Fatigue, dizziness, or fainting spells.</li>
+                <li>Rapid or irregular heartbeats (palpitations).</li>
+            </ul>
+
+            <h3>Diabetes:</h3>
+            <ul>
+                <li>Frequent urination.</li>
+                <li>Excessive thirst or hunger.</li>
+                <li>Unexplained weight loss.</li>
+                <li>Fatigue or irritability.</li>
+                <li>Blurry vision.</li>
+                <li>Slow-healing sores or frequent infections.</li>
+                <li>Numbness or tingling in hands and feet.</li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">Health Compass 🧭</div>
+            <div class="nav-right">
+                <a href="{{ url_for('admin') }}">Admin 🤵🏻</a></div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h1>Login</h1>
+            <form method="POST" action="{{ url_for('login') }}">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="result-message alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <div class="regbtn">
+                    <button onclick="window.location.href='{{ url_for('register') }}';" class="button">new User?,
+                        register here.</button>
+                </div>
+                <br>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

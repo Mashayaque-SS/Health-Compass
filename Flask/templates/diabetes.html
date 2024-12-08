@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}">Health Compass 🧭</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('tips') }}">Tips/Tricks</a>
+                <a href="{{ url_for('doctors') }}">Doctors</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h1>Diabetes Prediction ⭕</h1>
+            <h4>It's better to have your recent <b>Health Report</b> by your side while filling form</h4>
+            {% if result %}
+    <div class="result-message {{ 'alert' if alert else 'success' }}">
+        <p>{{ result }}</p>
+        {% if alert %}
+        <a href="{{ url_for('doctors') }}" class="btn consult-btn">Consult Doctors</a>
+        {% else %}
+        <a href="{{ url_for('tips') }}" class="btn tips-btn">Tips/Tricks</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+            <form method="POST">
+                <label for="pregnancies"><b>Number of Pregnancies:</b><br>
+                    Enter the total number of times you have been pregnant. This information helps assess risk related to gestational diabetes.</label>
+                <input type="number" id="pregnancies" name="pregnancies" required>
+            
+                <label for="glucose"><b>Glucose Level (in mg/dL):</b><br>
+                    Enter your blood glucose level. This measures the amount of sugar in your Blood<br>
+                    Good (Normal): Less than 100 mg/dL<br>
+                    Moderate (Prediabetes): 100 - 125 mg/dL<br>
+                    Bad (Diabetes): 126 mg/dL or higher</label>
+                <input type="number" id="glucose" name="glucose" required>
+            
+                <label for="bloodpressure"><b>Blood Pressure (in mm Hg):</b><br>
+                    Enter your blood pressure. This measures the force of blood against your artery walls.<br>
+                    Good (Normal): 80 - 120 mm Hg<br>
+                    Moderate (Elevated or Mild Hypertension): 121 - 139 mm Hg<br>
+                    Bad (High Blood Pressure or Hypertension): 140 mm Hg or higher</label>
+                <input type="number" id="bloodpressure" name="bloodpressure" required>
+            
+                <label for="skinthickness"><b>Skin Thickness (in mm):</b><br>
+                    Enter the thickness of your skin fold, measured with a caliper. This helps assess body fat, which is a factor in diabetes risk.<br>
+                    Good (Normal): 15 mm or less<br>
+                    Moderate: 16 - 25 mm<br>
+                    Bad (High Risk): More than 25 mm</label>
+                <input type="number" id="skinthickness" name="skinthickness" required>
+            
+                <label for="insulin"><b>Insulin Level (in IU/mL):</b><br>
+                    Enter your Insulin level, it is a hormone that helps regulate blood sugar levels.<br>
+                    Good (Normal): 2.5 - 25 IU/mL<br>
+                    Moderate: 26 - 50 IU/mL<br>
+                    Bad (High Risk): More than 50 IU/mL</label>
+                <input type="number" id="insulin" name="insulin" required>
+            
+                <label for="bmi"><b>Body Mass Index (BMI):</b><br>
+                    Enter your BMI, which is a measure of body fat based on your weight and height.<br>
+                    Good (Normal): 18.5 - 24.9<br>
+                    Moderate (Overweight): 25 - 29.9<br>
+                    Bad (Obese): 30 or higher</label>
+                <input type="number" step="0.1" id="bmi" name="bmi" required>
+            
+                <label for="dpf"><b>Diabetes Pedigree Function (DPF):</b><br>
+                    Enter the DPF score, which indicates your family history of diabetes and genetic predisposition.<br>
+                    Good (Low Risk): 0.0 - 0.2<br>
+                    Moderate (Moderate Risk): 0.3 - 0.6<br>
+                    Bad (High Risk): 0.7 or higher</label>
+                <input type="number" step="0.001" id="dpf" name="dpf" required>
+            
+                <label for="age"><b>Age:</b><br></label>
+                <input type="number" id="age" name="age" required>
+            
+                <button type="submit" class="submit-btn">Predict</button>
+            </form>
+            
+        </div>
+    </main>
+</body>
+
+</html>

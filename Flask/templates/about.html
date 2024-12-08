@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Health Compass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}">Health Compass 🧭</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('tips') }}">Tips/Tricks</a>
+                <a href="{{ url_for('doctors') }}">Doctors</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="about-section">
+            <h1>About Health Compass</h1>
+            <p><strong>Health Compass</strong> is an innovative web application designed to assist individuals in
+                understanding their health status through predictive analytics. Leveraging advanced machine learning
+                models, Health Compass provides insights into two critical health conditions: Heart Disease and
+                Diabetes.</p>                             
+            
+            <h2>Services:</h2>
+            <ul>
+                <li><strong>Disease predictions: </strong>Users can input their health parameters to receive
+                    predictions about the likelihood of heart disease or diabetes.</li>
+                <li><strong>Personal Profile: </strong>Users who have registered into Health Compass
+                    can store and view their health data whenever they want just by signing into the
+                    web app.</li>
+                <li><strong>Tips and Tricks: </strong>Users can access specialized Tips/Tricks
+                    page dedicated to Heart disease and diabetes for healthy lifestyle remedies.</li>
+                <li><strong>Doctors: </strong>Health compass is offering two options for consulting 
+                    specialized doctors(Cardiologists/Diabetologists).
+                    <ul>
+                        <li>Nearby Doctors: Users can locate nearby Cardiologists and Diabetologists
+                            according to their current location.</li>
+                        <li>Recommended Doctors: Users can view a list of specialist doctors recommended
+                            by health compass. First consultation fee is 20% off, for health compass users.</li>
+                    </ul>
+                    </li>         
+            </ul>
+            
+            <h2>Key Features:</h2>
+            <ul>
+                <li><strong>Proper Guidance: </strong>Health Compass properly direct their users, 
+                    whether to consult a doctor or just make user follow a healthy lifestyle accoring to their 
+                    health condition.</li>
+                <li><strong>Admin Panel: </strong>A admin will have all users data who 
+                    have registered themselves in Health Compass. Analytical data will be helpful 
+                    for the growth of web app.</li>
+                <li><strong>Consultation offer: </strong>A total of 20% off on first consultation 
+                    for all users of Health Compass.</li>
+                <li><strong>User's Profile: </strong>User will have their own personal profiles
+                    where they can view and store their health data also can see their 
+                    registration details.</li>
+                <li><strong>Apprehensible Forms: </strong>No subject expert required. Heart Disease and Diabetes input forms
+                    are designed in such a way that even a layman can understand(to fill it).</li>
+                <li><strong>Simple UI: </strong>Simple and Interactive User Interface which ensures 
+                    that user will navigate throughout the web app smoothly.</li>
+            </ul>
+
+            <h2>About Me:</h2>
+            <p><b>Hello Explorers! Mashayaque Sayyad here.</b> I'm a Third year Computer Science Student. A Data Science 
+                Enthusiast. Exploring deep into the field of Machine Learning and Artificial Intelligence.<br>
+                This project is developed as a part of my college project, employs state-of-the-art machine
+                learning algorithms (especially Supervised Classification algorithms such as Logistic Regression, KNN, etc)
+                to analyze user data and predict the likelihood of these conditions. With a focus on
+                both accuracy and user experience, this application integrates a user-friendly frontend with robust
+                backend models to deliver actionable health insights.<br>
+                Hope you like it :)</p>
+            <p><b>Health Compass is built to provide not just predictions, but also support and guide users to 
+                make informed decisions about their health.</b></p>
+        </div>
+    </main>
+</body>
+
+</html>

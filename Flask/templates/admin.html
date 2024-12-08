@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Registered Users</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">Health Compass 🧭</div>
+            <div class="nav-right">
+                {% if session.get('admin_logged_in') %}
+                <a href="{{ url_for('admin_logout') }}">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}">User Login</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% if not session.get('admin_logged_in') %}
+        <div class="form-container">
+            <h1>Admin Login</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="result-message alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('admin_login') }}">
+                <label for="admin_password">Password:</label>
+                <input type="password" id="admin_password" name="admin_password" required>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="form-container">
+            <div class="users-details">
+                <h1>Registered Users</h1>
+                <div class="users-table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Location</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr class="user-row">
+                                <td>{{ user['name'] }}</td>
+                                <td>{{ user['mail'] }}</td>
+                                <td>{{ user['location'] }}</td>
+                                <td>
+                                    <form action="{{ url_for('delete_user', user_id=user['id']) }}" method="post">
+                                        <button type="submit" class="delete-btn">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% if health_data.get(user['id']) %}
+                            <tr class="health-data-row">
+                                <td colspan="5">
+                                    <strong>Health Data:</strong><br>
+                                    {% for health in health_data[user['id']] %}
+                                    <p><strong>{{ health['type'] }}:</strong></p>
+                                    <ul>
+                                        {% if health['type'] == 'Heart Disease' %}
+                                        <li><b>Age:</b> {{ health['health_parameters']['age'] }}</li>
+                                        <li><b>Sex:</b> {{ 'Male' if health['health_parameters']['sex'] == 1 else 'Female' }}</li>
+                                        <li><b>Type of chest pain:</b> {{ health['health_parameters']['cp'] }}</li>
+                                        <li><b>Resting blood pressure:</b> {{ health['health_parameters']['trestbps'] }} mm Hg</li>
+                                        <li><b>Cholesterol level:</b> {{ health['health_parameters']['chol'] }} mg/dL</li>
+                                        <li><b>Fasting blood sugar > 120 mg/dL?:</b> {{ 'Yes' if health['health_parameters']['fbs'] == 1 else 'No' }}</li>
+                                        <li><b>Resting ECG results:</b> {{ health['health_parameters']['restecg'] }}</li>
+                                        <li><b>Max heart rate during exercise:</b> {{ health['health_parameters']['thalach'] }} bpm</li>
+                                        <li><b>Exercise-induced angina?:</b> {{ 'Yes' if health['health_parameters']['exang'] == 1 else 'No' }}</li>
+                                        <li><b>ST depression during exercise:</b> {{ health['health_parameters']['oldpeak'] }}</li>
+                                        <li><b>Slope of ST segment:</b> {{ health['health_parameters']['slope'] }}</li>
+                                        <li><b>Number of major vessels:</b> {{ health['health_parameters']['ca'] }}</li>
+                                        <li><b>Thallium stress test result:</b> {{ health['health_parameters']['thal'] }}</li>
+                                        {% elif health['type'] == 'Diabetes' %}
+                                        <li><b>Number of pregnancies:</b> {{ health['health_parameters']['pregnancies'] }}</li>
+                                        <li><b>Glucose level:</b> {{ health['health_parameters']['glucose'] }} mg/dL</li>
+                                        <li><b>Blood pressure:</b> {{ health['health_parameters']['bloodpressure'] }} mm Hg</li>
+                                        <li><b>Skin thickness:</b> {{ health['health_parameters']['skinthickness'] }} mm</li>
+                                        <li><b>Insulin level:</b> {{ health['health_parameters']['insulin'] }} IU/mL</li>
+                                        <li><b>BMI:</b> {{ health['health_parameters']['bmi'] }}</li>
+                                        <li><b>Diabetes Pedigree Function:</b> {{ health['health_parameters']['dpf'] }}</li>
+                                        <li><b>Age:</b> {{ health['health_parameters']['age'] }}</li>
+                                        {% else %}
+                                        <li>Unknown health data</li>
+                                        {% endif %}
+                                    </ul>
+                                    <p><strong>Result:</strong> {{ health['result'] }}</p>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <tr class="separator-row">
+                                <td colspan="5">
+                                    <hr>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>

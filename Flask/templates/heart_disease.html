@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}">Health Compass 🧭</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('tips') }}">Tips/Tricks</a>
+                <a href="{{ url_for('doctors') }}">Doctors</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h1>Heart Disease Prediction ❤</h1>
+            <h4>It's better to have your recent <b>Health Report</b> by your side while filling form</h4>
+            {% if result %}
+            <div class="result-message {{ 'alert' if alert else 'success' }}">
+                <p>{{ result }}</p>
+                {% if alert %}
+                <a href="{{ url_for('doctors') }}" class="btn consult-btn">Consult Doctors</a>
+                {% else %}
+                <a href="{{ url_for('tips') }}" class="btn tips-btn">Tips/Tricks</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="scrollable-form">
+                <form method="POST">
+                    <label for="age"><b>Age (Your age in years):</b></label>
+                    <input type="number" id="age" name="age" required>
+
+                    <label for="sex"><b>Sex:</b></label>
+                    <select id="sex" name="sex" required>
+                        <option value="1">Male</option>
+                        <option value="0">Female</option>
+                    </select>
+
+                    <label for="cp"><b>Type of chest pain you experience:</b><br>
+                        Typical (low risk)<br>
+                        Atypical (moderate risk)<br>
+                        Non-anginal (bad risk)<br>
+                        Asymptomatic (bad risk).</label>
+                    <select id="cp" name="cp" required>
+                        <option value="0">Typical Angina</option>
+                        <option value="1">Atypical Angina</option>
+                        <option value="2">Non-anginal Pain</option>
+                        <option value="3">Asymptomatic</option>
+                    </select>
+
+                    <label for="trestbps"><b>Your blood pressure when resting (in mm Hg).</b><br>
+                        Good (Normal): 80 - 120 mm Hg<br>
+                        Moderate (Elevated or Mild Hypertension): 121 - 139 mm Hg<br>
+                        Bad (High Blood Pressure or Hypertension): 140 mm Hg or higher<br>
+                    </label>
+                    <input type="number" id="trestbps" name="trestbps" required>
+
+                    <label for="chol"><b>Your cholesterol level (in mg/dl).</b><br>
+                        Good (Desirable): Less than 200 mg/dL<br>
+                        Moderate (Borderline High): 200 - 239 mg/dL<br>
+                        Bad (High Cholesterol): 240 mg/dL or higher<br>
+                    </label>
+                    <input type="number" id="chol" name="chol" required>
+
+                    <label for="fbs"><b>Is your fasting blood sugar level higher than 120 mg/dL?</b><br>
+                        Yes (This indicates elevated blood sugar, possibly a sign of prediabetes or diabetes.)<br>
+                        No (Your blood sugar is within a healthy range.)<br>
+                    </label>
+                    <select id="fbs" name="fbs" required>
+                        <option value="1">True</option>
+                        <option value="0">False</option>
+                    </select>
+
+                    <label for="restecg"><b>Your resting ECG results:</b><br>
+                        Normal (Your heart's electrical activity is functioning normally.)<br>
+                        ST-T Wave Abnormality (There may be signs of heart strain or insufficient blood flow.)<br>
+                        Left Ventricular Hypertrophy (The heart’s left ventricle is thickened, possibly due to high
+                        blood pressure or other heart issues.)<br>
+                    </label>
+                    <select id="restecg" name="restecg" required>
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T Wave Abnormality</option>
+                        <option value="2">Left Ventricular Hypertrophy</option>
+                    </select>
+
+                    <label for="thalach"><b>The highest heart rate you reached during exercise:</b><br>
+                        Normal (Up to 180 bpm) (Your heart rate during exercise is within a typical range for your age
+                        and fitness level.)<br>
+                        Elevated (181 - 200 bpm) (Your heart rate is higher than usual, which might indicate
+                        overexertion or potential heart issues.)<br>
+                        High (Above 200 bpm) (Your heart rate is very high, which could be a sign of excessive strain or
+                        a potential heart problem.)<br>
+                    </label>
+                    <input type="number" id="thalach" name="thalach" required>
+
+                    <label for="exang"><b>Do you experience pain or discomfort in your chest during
+                            exercise?</b></label>
+                    <select id="exang" name="exang" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+
+                    <label for="oldpeak"><b>Depression of ST segment during exercise compared to rest (indicating heart
+                            stress):</b><br>
+                        Good (0 - 0.1 mm):Minimal or no depression, indicating your heart is handling exercise well and
+                        there is little to no stress.<br>
+                        Moderate (0.2 - 0.4 mm):Moderate depression, suggesting some level of heart stress or potential
+                        issues that might need further investigation.<br>
+                        Bad (0.5 mm or more):Significant depression, indicating considerable heart stress and a higher
+                        risk of cardiovascular problems that should be evaluated by a healthcare provider.<br>
+                    </label>
+                    <input type="number" step="0.1" id="oldpeak" name="oldpeak" required>
+
+                    <label for="slope"><b>Shape of ST segment during peak exercise:</b><br>
+                        Upsloping: The ST segment rises gradually during peak exercise, typically indicating a lower
+                        risk of significant heart issues.<br>
+                        Flat: The ST segment remains level during peak exercise, which may suggest some level of heart
+                        stress or potential issues.<br>
+                        Downsloping: The ST segment falls during peak exercise, often indicating significant heart
+                        stress or a higher risk of cardiovascular problems.<br>
+                    </label>
+                    <select id="slope" name="slope" required>
+                        <option value="0">Upsloping</option>
+                        <option value="1">Flatsloping</option>
+                        <option value="2">Downsloping</option>
+                    </select>
+
+                    <label for="ca"><b>Number of blood vessels colored by fluoroscopy (indicating blockage or narrowing,
+                            max=3):</b><br>
+                        0 = No vessels colored: All blood vessels appear normal with no significant blockages or
+                        narrowing.<br>
+                        1 = One vessel colored: There is some blockage or narrowing in one blood vessel, which might
+                        need attention but is less severe.<br>
+                        2 = Two vessels colored: lockages or narrowing in two blood vessels, suggesting a higher risk of
+                        heart issues and potentially requiring further intervention.<br>
+                        3 = Three vessels colored: Significant blockages or narrowing in three blood vessels, indicating
+                        severe coronary artery disease that usually requires medical treatment or intervention.<br>
+                    </label>
+                    <input type="number" id="ca" name="ca" min="0" max="3" required>
+
+                    <label for="thal"><b>Result of thallium stress test:</b><br>
+                        Normal: Your heart shows normal function and blood flow during the test, indicating no
+                        significant issues.<br>
+                        Fixed Defect: There is a consistent area of reduced blood flow or damage in your heart that does
+                        not change with stress, suggesting a previous heart injury or scar.<br>
+                        Reversible DefectThere is an area of reduced blood flow during stress that improves with rest,
+                        indicating potential heart issues that may be due to blockages or other
+                        conditions that could be treated or managed.
+                    </label>
+                    <select id="thal" name="thal" required>
+                        <option value="1">Normal</option>
+                        <option value="6">Fixed Defect</option>
+                        <option value="7">Reversible Defect</option>
+                    </select>
+
+                    <button type="submit" class="submit-btn">Predict</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

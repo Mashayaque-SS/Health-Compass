@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Compass - Tips/Tricks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}">Health Compass 🧭</a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('tips') }}">Tips/Tricks</a>
+                <a href="{{ url_for('doctors') }}">Doctors</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="tips-section">
+            <!-- Heart Disease Prevention Tips -->
+            <h1>Heart Disease Prevention Tips 🚴🏻</h1>
+            <ul>
+                <li>
+                    <strong>Dietary Tips:</strong>
+                    <ul>
+                        <li>Eat more fruits, vegetables, whole grains, and lean proteins.</li>
+                        <li>Avoid trans fats, excessive salt, and added sugars.</li>
+                        <li>Incorporate healthy fats like omega-3 fatty acids (found in fish, nuts, and seeds).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Exercise and Physical Activity:</strong>
+                    <ul>
+                        <li>Engage in at least 150 minutes of moderate-intensity aerobic activity per week (e.g., brisk walking, cycling).</li>
+                        <li>Include strength training exercises at least twice a week.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Lifestyle Modifications:</strong>
+                    <ul>
+                        <li>Quit smoking and limit alcohol consumption.</li>
+                        <li>Manage stress through relaxation techniques such as meditation, yoga, or deep breathing exercises.</li>
+                        <li>Get regular health check-ups, including cholesterol and blood pressure monitoring.</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <!-- Diabetes Prevention Tips -->
+            <h1>Diabetes Prevention Tips 🥦</h1>
+            <ul>
+                <li>
+                    <strong>Dietary Tips:</strong> 
+                    <ul>
+                        <li>Focus on a balanced diet rich in fiber, including whole grains, fruits, and vegetables.</li>
+                        <li>Avoid sugary drinks and processed foods high in refined sugars.</li>
+                        <li>Limit consumption of red and processed meats; prefer lean protein sources like chicken, fish, and plant-based proteins.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Exercise and Physical Activity:</strong>
+                    <ul>
+                        <li>Engage in regular physical activity; aim for 30 minutes of moderate-intensity exercise most days of the week.</li>
+                        <li>Include activities like walking, swimming, or cycling to help manage weight and blood sugar levels.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Lifestyle Modifications:</strong>
+                    <ul>
+                        <li>Maintain a healthy weight; even a small weight loss (5-10% of body weight) can significantly reduce the risk of diabetes.</li>
+                        <li>Monitor blood sugar levels regularly if you are at risk or have pre-diabetes.</li>
+                        <li>Get enough sleep (7-8 hours per night) and manage stress effectively.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>
