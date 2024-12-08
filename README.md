@@ -78,5 +78,3 @@ Health_Compass/
 
 ---
 
-## Screenshots
-
