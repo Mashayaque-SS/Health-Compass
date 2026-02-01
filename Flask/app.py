@@ -4,6 +4,11 @@ import numpy as np
 import requests 
 import sqlite3
 import json
+from serpapi import GoogleSearch
+from flask import jsonify
+from math import radians, cos, sin, asin, sqrt
+
+
 
 app = Flask(__name__)
 app.secret_key = 'Mashu'
@@ -12,6 +17,12 @@ admin_password="admin123"
 # Loading saved models
 heart_disease_model = pickle.load(open('tuned_logistic_regression_model.pkl', 'rb'))
 diabetes_model = pickle.load(open('diabetes_model.pkl', 'rb'))
+def distance_km(lat1, lon1, lat2, lon2):
+    R = 6371  # Earth radius in km
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    return 2 * R * asin(sqrt(a))
 
 @app.route('/')
 def start():
@@ -308,6 +319,54 @@ def admin_logout():
     session.pop('admin_logged_in', None)
     flash('Admin logged out successfully.', 'info')
     return redirect(url_for('admin'))
+@app.route("/api/find_doctors")
+def api_find_doctors():
+    lat = float(request.args.get("lat"))
+    lon = float(request.args.get("lon"))
+    doctor_type = request.args.get("type")
+
+    # Decide query
+    if doctor_type == "cardiologist":
+        query = "cardiologist"
+    else:
+        query = "diabetologist"
+
+    params = {
+        "engine": "google_maps",
+        "q": query,
+        "ll": f"@{lat},{lon},14z",
+        "type": "search",
+
+        
+        "hl": "en",
+        "gl": "in",
+        "google_domain": "google.co.in",
+
+        "api_key": "7dabb6cb8f08972184d971da3eef7754f7c2e6d95e0c34b70969848e25790baa"
+    }
+
+    search = GoogleSearch(params)
+    results = search.get_dict()
+
+    filtered_results = []
+
+    for place in results.get("local_results", []):
+        gps = place.get("gps_coordinates")
+        if gps:
+            dist = distance_km(
+                lat,
+                lon,
+                gps["latitude"],
+                gps["longitude"]
+            )
+
+            # ✅ 10 KM RANGE (change to 5 if needed)
+            if dist <= 10:
+                place["distance_km"] = round(dist, 2)
+                filtered_results.append(place)
+
+    return jsonify(filtered_results)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

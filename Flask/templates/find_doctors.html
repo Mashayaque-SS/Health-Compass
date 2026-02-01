@@ -26,145 +26,141 @@
     </header>
 
     <script>
-        const OPEN_CAGE_API_KEY = 'b96da9f98c7f49168fe76284caa5b2f3';
-        // user's geolocation
+        /* =======================
+           OpenCage (Location Name)
+        ======================== */
+        const OPEN_CAGE_API_KEY = '2db64e1162a4418c9d25a0543286f343';
+function reverseGeocode(lat, lon) {
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPEN_CAGE_API_KEY}`;
+
+    return fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.results || data.results.length === 0) {
+                return "Location not found";
+            }
+
+            const comp = data.results[0].components;
+
+            const area =
+                comp.suburb ||
+                comp.neighbourhood ||
+                comp.village ||
+                comp.town ||
+                comp.city_district ||
+                comp.city ||
+                "Unknown Area";
+
+            const city = comp.city || "Mumbai";
+            const pincode = comp.postcode || "N/A";
+
+            return `${area}, ${city} – ${pincode}`;
+        })
+        .catch(() => "Location unavailable");
+}
+
+
+        /* =======================
+           Get User Location
+        ======================== */
         function getUserLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    showPosition,
-                    showError
-                );
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
                 alert("Geolocation is not supported by this browser.");
             }
         }
 
-        // getting user's location name
-        function reverseGeocode(lat, lon) {
-            const apiEndpoint = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPEN_CAGE_API_KEY}`;
+        async function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const doctorType = document.querySelector('input[name="doctorType"]:checked').value;
 
-            return fetch(apiEndpoint)
-                .then(response => response.json())
+            // Show city & pincode (OpenCage)
+            const locationName = await reverseGeocode(lat, lon);
+            document.getElementById("locationInfo").innerText =
+                `Detected Location: ${locationName}`;
+
+            // Fetch doctors via SerpAPI (Flask backend)
+            fetchNearbyDoctors(doctorType, lat, lon);
+        }
+
+        function showError(error) {
+            alert("Unable to fetch your location. Please allow location access.");
+        }
+
+        /* =======================
+           Fetch Doctors (SerpAPI)
+        ======================== */
+        function fetchNearbyDoctors(type, lat, lon) {
+            fetch(`/api/find_doctors?type=${type}&lat=${lat}&lon=${lon}`)
+                .then(res => res.json())
                 .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        return data.results[0].formatted; // formatted address
-                    } else {
-                        return 'Location not found'; 
+                    const doctorsList = document.getElementById("doctorsList");
+                    doctorsList.innerHTML = "";
+
+                    if (!data || data.length === 0) {
+                        doctorsList.innerHTML = "<li>No doctors found nearby.</li>";
+                        return;
                     }
+
+                    data.forEach(doc => {
+                        const name = doc.title || "Doctor";
+                        const address = doc.address || "Address not available";
+                        const phone = doc.phone || "Not available";
+
+                        const li = document.createElement("li");
+                        li.innerHTML = `
+                            <strong>${name}</strong><br>
+                            Address: ${address}<br>
+                            Contact: ${phone}
+                        `;
+                        doctorsList.appendChild(li);
+                    });
                 })
-                .catch(error => {
-                    console.error('Error reverse geocoding:', error);
-                    return 'Error fetching location';
+                .catch(() => {
+                    alert("Unable to fetch doctors at the moment.");
                 });
         }
 
-        // showing user's location and fetching nearby doctors
-        async function showPosition(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const doctorType = document.querySelector('input[name="doctorType"]:checked').value;
-
-            const placeName = await reverseGeocode(latitude, longitude);
-
-            alert(`Your current location is: Latitude ${latitude}, Longitude ${longitude}, Place: ${placeName}`);
-
-            // Making API call to get nearby doctors
-            fetchNearbyDoctors(doctorType, latitude, longitude);
-        }
-
-        // handling errors in getting geolocation
-        function showError(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("Geolocation access denied.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("An unknown error occurred.");
-                    break;
-            }
-        }
-
-        // fetching nearby doctors using Foursquare Places API
-        function fetchNearbyDoctors(type, lat, lon) {
-            const apiKey = 'fsq3h+GV1f1HuVV/f9ntjMhu6n82loVjffmHZSvQBTRdOas=';
-            const radius = 10000;  // radius in meters
-            const query = type === 'cardiologist' ? 'cardiologist' : 'diabetes specialist';
-            const apiEndpoint = `https://api.foursquare.com/v3/places/search?query=${query}&ll=${lat},${lon}&radius=${radius}`;
-
-            fetch(apiEndpoint, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': apiKey
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        // list of nearby doctors
-                        const doctorsList = document.getElementById('doctorsList');
-                        doctorsList.innerHTML = '';  // Clearing previous results
-
-                        data.results.forEach(doctor => {
-                            const distanceKm = (doctor.distance / 1000).toFixed(2);  // Convert meters to kilometers
-                            const contact = doctor.contact || 'N/A';
-                            const availability = doctor.availability || 'N/A';
-                            const consultationFee = doctor.consultationFee || 'N/A';
-                            const degree = doctor.degree || 'N/A';
-
-                            const doctorItem = document.createElement('li');
-                            doctorItem.innerHTML = `<strong>Name:</strong> ${doctor.name}<br>
-                                                    <strong>Address:</strong> ${doctor.location.address || 'N/A'}<br>
-                                                    <strong>Distance:</strong> ${distanceKm} km<br>
-                                                    <strong>Contact:</strong> ${contact}<br>
-                                                    <strong>Availability:</strong> ${availability}<br>`;
-                            doctorsList.appendChild(doctorItem);
-                        });
-                    } else {
-                        alert(`No ${type}s found near your location.`);
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
-        // Triggers getUserLocation when the page loads
-        window.onload = function() {
-            document.getElementById('findDoctorsBtn').addEventListener('click', getUserLocation);
+        window.onload = function () {
+            document.getElementById("findDoctorsBtn")
+                .addEventListener("click", getUserLocation);
         };
     </script>
 
-<main>
-    <div class="doctor-list">
-        <div class="header-flex">
-            <h1>Find Nearby Doctors</h1>
-            <button onclick="window.location.href='{{ url_for('stat_doctors') }}';" class="btn tips-btn">Suggestions</button>
-        </div>
-        <p>Select the type of specialist you are looking for in your nearby location</p>
-        <div class="doctor-type">
-            <label>
-                <input type="radio" name="doctorType" value="cardiologist" checked>
-                Cardiologist ❤
-            </label>
-            <label>
-                <input type="radio" name="doctorType" value="diabetes specialist">
-                Diabetologists ⭕
-            </label>
-        </div>
+    <main>
+        <div class="doctor-list">
+            <div class="header-flex">
+                <h1>Find Nearby Doctors</h1>
+                <a href="{{ url_for('stat_doctors') }}" class="btn tips-btn">
+                    Suggestions
+                </a>
+            </div>
 
-        <button id="findDoctorsBtn" class="btn consult-btn">Get My Location</button>
+            <p>Select the type of specialist you are looking for</p>
 
-        <h2>Doctors in Your Area:</h2>
-        <ul id="doctorsList" class="doctors">
-            <!-- Nearby doctors will be listed here -->
-        </ul>
-    </div>
-</main>
+            <div class="doctor-type">
+                <label>
+                    <input type="radio" name="doctorType" value="cardiologist" checked>
+                    Cardiologist ❤
+                </label>
+                <label>
+                    <input type="radio" name="doctorType" value="diabetes specialist">
+                    Diabetologists ⭕
+                </label>
+            </div>
+
+            <p id="locationInfo"></p>
+
+            <button id="findDoctorsBtn" class="btn consult-btn">
+                Get My Location
+            </button>
+
+            <h2>Doctors in Your Area:</h2>
+            <ul id="doctorsList" class="doctors"></ul>
+        </div>
+    </main>
 </body>
 
 </html>
